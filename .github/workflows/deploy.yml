@@ -34,6 +34,7 @@ jobs:
           DROPBOX_REFRESH_TOKEN=${{ secrets.DROPBOX_REFRESH_TOKEN }}
           WAVELINK_PASSWORD=${{ secrets.WAVELINK_PASSWORD }}
           EOF
+          sed -i 's/$/$$/g' .env
 
       - name: Copy compose and config to VM
         uses: appleboy/scp-action@v0.1.7
@@ -54,5 +55,6 @@ jobs:
           script: |
             cd /home/opc
             docker compose pull
+            docker compose down
             docker compose --env-file .env up -d
             docker image prune -f 
