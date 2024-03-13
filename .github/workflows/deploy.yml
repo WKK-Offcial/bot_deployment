@@ -1,0 +1,61 @@
+name: Deploy on Oracle
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-event]
+
+jobs:
+  deploy:
+    name: Deploy on Oracle Cloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create lavalink config file
+        uses: cuchi/jinja2-action@v1.2.2
+        with:
+          template: application.yml.j2
+          output: application.yml
+          strict: true
+        env:
+            WAVELINK_PASSWORD: ${{ secrets.WAVELINK_PASSWORD }}
+      
+      - name: Create env file
+        run: |
+          - name: Create env file
+            run: |
+              cat <<EOF > .env
+              #Auto generated .env file
+              DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+              DROPBOX_APP_KEY=${{ secrets.DROPBOX_APP_KEY }}
+              DROPBOX_APP_SECRET=${{ secrets.DROPBOX_APP_SECRET }}
+              DROPBOX_REFRESH_TOKEN=${{ secrets.DROPBOX_REFRESH_TOKEN }}
+              WAVELINK_PASSWORD=${{ secrets.WAVELINK_PASSWORD }}
+              EOF
+
+      - name: Copy compose and config to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ORACLE_VM_IP }}
+          username: opc
+          key: ${{ secrets.ORACLE_VM_KEY }}
+          source: "./docker-compose.yml,./application.yml,./.env"
+          target: "/home/opc"
+      
+      - name: Compose up
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.ORACLE_VM_IP }}
+          username: opc
+          key: ${{ secrets.ORACLE_VM_KEY }}
+          script_stop: true
+          script: |
+            cd /home/opc
+            docker-compose pull
+            docker-compose --env-file .env up -d
+            docker image prune -f 

@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  wkk_boi:
+    depends_on:
+        - lavalink_server
+        - lavalink_api
+    image: ghcr.io/wkk-offcial/boi_redemption_arc:latest
+    container_name: wkk_boi
+    networks:
+      - wkk-network
+    volumes:
+      - /home/opc/soundboards:/wkk-bot/cache/soundboards
+    environment:
+      - BOT_TOKEN=${DISCORD_TOKEN}
+      - SERVER_IP=lavalink_api
+      - SERVER_PORT=8000
+      - SERVER_ENDPOINT=sounds
+      - WAVELINK_URL=http://lavalink_server
+      - WAVELINK_PORT=2333
+      - WAVELINK_PASSWORD=${WAVELINK_PASSWORD}
+    restart: unless-stopped
+
+  lavalink_server:
+    image: ghcr.io/wkk-offcial/lavalink_server:latest
+    container_name: lavalink_server
+    networks:
+      - wkk-network
+    ports:
+      - "36969:2333"
+    volumes:
+      - sounds:/home/Lavalink/sounds
+      - type: bind  # bind mount
+        source: application.yml
+        target: /home/Lavalink/application.yml
+    environment:
+      - DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
+      - DROPBOX_APP_SECRET=${DROPBOX_APP_SECRET}
+      - DROPBOX_REFRESH_TOKEN=${DROPBOX_REFRESH_TOKEN}
+    restart: unless-stopped
+
+  lavalink_api:
+    image: ghcr.io/wkk-offcial/lavalink_helper_api:latest
+    container_name: lavalink_api
+    networks:
+      - wkk-network
+    ports:
+      - "36970:8000"
+    environment:
+      - DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
+      - DROPBOX_APP_SECRET=${DROPBOX_APP_SECRET}
+      - DROPBOX_REFRESH_TOKEN=${DROPBOX_REFRESH_TOKEN}
+    restart: unless-stopped
+
+networks:
+  wkk-network:
+    driver: bridge
+
+volumes:
+  sounds:
