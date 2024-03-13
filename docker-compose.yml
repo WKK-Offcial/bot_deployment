@@ -10,7 +10,7 @@ services:
     networks:
       - wkk-network
     volumes:
-      - /home/opc/soundboards:/wkk-bot/cache/soundboards
+      - ./soundboards:/wkk-bot/cache/soundboards
     environment:
       - BOT_TOKEN=${DISCORD_TOKEN}
       - SERVER_IP=lavalink_api
