@@ -34,7 +34,7 @@ jobs:
           DROPBOX_REFRESH_TOKEN=${{ secrets.DROPBOX_REFRESH_TOKEN }}
           WAVELINK_PASSWORD=${{ secrets.WAVELINK_PASSWORD }}
           EOF
-          sed -i 's/$/$$/g' .env
+          sed -i 's/\$/\$\$/g' .env
 
       - name: Copy compose and config to VM
         uses: appleboy/scp-action@v0.1.7
