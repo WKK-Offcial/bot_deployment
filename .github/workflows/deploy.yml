@@ -16,15 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create lavalink config file
-        uses: cuchi/jinja2-action@v1.2.2
+      - name: Render application.yml template
+        uses: chuhlomin/render-template@v1
         with:
-          template: ./application.yml.j2
-          output: ./application.yml
-          strict: true
-          variables: |
-            WAVELINK_PASSWORD=${{ secrets.WAVELINK_PASSWORD }}
-            
+          template: application.template.yml
+          vars: |
+            wavelink_password: ${{ secrets.WAVELINK_PASSWORD }}
+          result_path: application.yml
       
       - name: Create env file
         run: |
