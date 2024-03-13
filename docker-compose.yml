@@ -46,6 +46,8 @@ services:
       - wkk-network
     ports:
       - "36970:8000"
+    volumes:
+      - sounds:/home/Lavalink/sounds
     environment:
       - DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
       - DROPBOX_APP_SECRET=${DROPBOX_APP_SECRET}
