@@ -53,6 +53,6 @@ jobs:
           script_stop: true
           script: |
             cd /home/opc
-            docker-compose pull
-            docker-compose --env-file .env up -d
+            docker compose pull
+            docker compose --env-file .env up -d
             docker image prune -f 
