@@ -13,7 +13,7 @@ plugins:
       - WEB
     clientOptions:
       WEB:
-        videoLoading: false
+        videoLoading: true
 lavalink:
   plugins:
     # Replace VERSION with the current version as shown by the Releases tab or a long commit hash for snapshots.
