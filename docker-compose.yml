@@ -30,9 +30,7 @@ services:
       - "36969:2333"
     volumes:
       - sounds:/home/Lavalink/sounds
-      - type: bind  # bind mount
-        source: application.yml
-        target: /home/Lavalink/application.yml
+      - ./application.yml:/home/Lavalink/application.yml
     environment:
       - DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
       - DROPBOX_APP_SECRET=${DROPBOX_APP_SECRET}
