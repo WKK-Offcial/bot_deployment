@@ -22,6 +22,7 @@ jobs:
           template: application.template.yml
           vars: |
             wavelink_password: ${{ secrets.WAVELINK_PASSWORD }}
+            youtube_refresh_token: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           result_path: application.yml
       
       - name: Create env file
